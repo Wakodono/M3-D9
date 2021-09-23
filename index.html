@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+    integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous" />
+
+  <title>The New Amazon</title>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">AMAZON</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="./backoffice.html">Backoffice</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container my-3">
+    <div class="row justify-content-center">
+      <div class="col-md-3">
+        <!-- <h2 class="mt-5 mb-3">Current Product</h2> -->
+        <!-- <ul id="current-product" class="list-group"></ul> -->
+        <div id="product_wrapper" class="card">
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns"
+    crossorigin="anonymous"></script>
+
+  <!-- My scripts -->
+  <script>
+
+    let myHeaders = new Headers();
+    myHeaders.append("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MTFkMDkxOTJkNTI2MjAwMTViNmRjZjgiLCJpYXQiOjE2MzIzMTk5MjYsImV4cCI6MTYzMzUyOTUyNn0.5cBLlYna9rdW7HUvsZEpiFKRgBEx-FzOy6ux4wqu90Y");
+
+    const getData = async (url) => {
+      try {
+        const response = await fetch(url, { headers: myHeaders });
+
+        const productObj = await response.json();
+        return productObj;
+
+      } catch (err) {
+        console.log("OH NO: ", err);
+      }
+    };
+
+    const productWrapper = document.getElementById("current-product");
+
+    const displayProduct = (productObj) => {
+      
+        productWrapper.innerHTML = productObj.map(
+            (product) => `
+              <div id="book-wrap" class="col-12 col-sm-6 col-md-3">
+                  <div class="card">
+                      <img src="${productObj.imageUrl}" class="card-img-top img-fluid w=100 object-fit: cover" alt="...">
+                      <div class="card-body">
+                      <h5 class="card-title">${productObj.name}</h5>
+                      <p class="card-text">${productObj.price}</p>
+                      </div>
+                  </div>
+              </div>
+          `
+          )
+          .join("");
+      
+    };
+
+    /*  <div id="product-wrapper" class="col">
+      <div class="card" style="width: 18rem">
+        <img src="..." class="card-img-top" alt="..." />
+        <div class="card-body">
+          <h5 class="card-title">Card title</h5>
+          <p class="card-text">
+            Some quick example text to build on the card title and make up the
+            bulk of the card's content.
+          </p>
+          <a href="#" class="btn btn-primary">
+            Go somewhere
+          </a>
+        </div>
+      </div>
+    </div>; */
+
+    window.onload = async () => {
+      const url = "https://striveschool-api.herokuapp.com/api/product/";
+
+      const productObj = await getData(url);
+
+      displayProduct(productObj);
+
+      console.log("PRODUCT OBJ", productObj);
+    };
+  </script>
+</body>
+
+</html>
